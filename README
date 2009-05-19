@@ -1,0 +1,82 @@
+
+                                 * pgasync *
+
+             An asyncronous, twisted-based PostgreSQL client library
+
+                   Written by Jamie Turner <jamwt@jamwt.com>
+
+
+OVERVIEW
+--------
+
+pgasync fully conforms to the DB 2.0 API.  
+
+In a single, dedicated thread, it generally runs about 1.8x as slow as syncronous 
+psycopg, which is written entirely in C.
+
+However, using adbapi (psycopg's twisted.enterprise w/the overhead of threading), 
+it runs slightly faster than psycopg + enterprise at low load, 
+and seems to be *much* more stable and scalable under heavy load.
+
+All execute(), exFetch(), and fetch*() methods return a 
+twisted.internet.defer.Deferred.  Queries will be queued, so feel free to 
+ignore these deferreds if you're not interested in the results: keep adding
+more queries.
+
+The one exception is connection.cursor().  No queries should execute
+until this function's deferred calls back.
+
+paramstyle is pyformat.  types are provided.
+
+Pooling/persistence happens, and the pool grows/shrinks based on activity.
+
+REQUIREMENTS
+------------
+
+Twisted 1.3
+Python 2.3+ (for datetime module)
+PostgreSQL 7.4+ (protocol version 3.0)
+
+INSTALLATION
+------------
+
+# python setup.py install
+
+BEFORE YOU BEGIN
+----------------
+
+Read the notes on the website:
+
+ http://jamwt.com/pgasync/#notes
+
+SIMPLE EXAMPLE
+--------------
+
+cur = db.cursor()
+
+# 1st arg 'rows' gets added; return value of async function
+def printRows(rows,cur):
+	print rows
+	
+# execute + fetch with one callback
+cur.exFetch("SELECT * FROM users WHERE username = %(matchname)s",{matchname : "pete"}).addCallback(fetch,cur) 
+
+MORE EXAMPLES
+-------------
+
+examples/ directory of this distribution.
+
+INSTALL NOTES
+-------------
+
+It utillizes a Pyrex file to take care of one processor intesive thing.  This
+cache.c file is pre-built for you and shipped with the distribution.  The cache.pyx
+file is available in case you run into problems.  Set REBUILD_PYREX to True if you
+want the pyx to be reprocessed (you'll need pyrex).
+
+Also: it builds a simple convert.c file that has some convenient byte order swapping
+functions for the pyx.  This hasn't been tested on anything but FreeBSD and Linux
+at the moment.  If there's a different header file needed for htonl/htons for your
+system, please let me know.
+
+Cleartext and MD5 auth are supported.  

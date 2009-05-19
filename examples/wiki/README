@@ -1,0 +1,28 @@
+
+                   Simple Wiki Example
+
+Description
+-----------
+
+This wiki uses restructured text.  It's pretty minimal, but
+it uses a db backend, and implements pgasync code in a scalable
+way.
+
+Requirements
+------------
+
+Beyond pgasync and its base requirements, the following are also
+needed:
+
+ * Nevow 0.3
+ * docutils (recent version)
+
+Running
+-------
+
+Execute setup.sh as the PostgreSQL database owner account (often
+called 'postgres'), then run:
+
+ twistd -noy wiki.py
+
+and browse to http://localhost:8080/

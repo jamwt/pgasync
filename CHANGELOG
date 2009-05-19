@@ -1,0 +1,301 @@
+2.01
+=======================
+
+*issues*
+--------------
+
+FIXD  - runQuery and runInteraction needed ConnectionPool._error, which was
+        removed.  Fixed.
+
+2.0
+=======================
+
+*issues*
+--------------
+
+FIXD  - Errback handling fixes
+        
+FIXD  - Removed useless explicit conversion of integers to
+        NUMBER when no special formatting is done on them
+
+FIXD  - Exposed __int__, __float__ and friends in NUMBER
+        just in case a NUMBER instance is tossed to format()
+
+FIXD  - The above two fixes mean you can now do %03d style
+        formatting in format()
+
+FIXD  - A trailing semicolon can be included on execute()
+        commands now
+
+FIXD  - Added boolean support (thanks: Andrea Arcangeli)
+        
+*enhancements*
+--------------
+
+ - Experimental Unicode Support (thanks Matt Goodall)
+
+ - Unix socket support added (thanks Stephen Early)
+
+ - convertBinary function to get stored binary back out
+   of the database
+
+
+
+1.15b
+=======================
+
+*issues*
+--------------
+
+FIXD  - cleaned up a few circular references and added a gc.collect()
+        to the pool's prune() routine to remove memory leaking
+
+FIXD  - Made it so the second attempt to errback in runOperation is 
+        ignored on exception in cases that the errback has already been
+		called
+
+
+1.14b
+=======================
+
+*issues*
+--------------
+
+FIXD  - fixed typo in runOperation, improved errback handling
+
+FIXD  - fixed a few concurrency issues, dropped connection handling
+
+
+1.13b
+=======================
+
+*enhancements*
+--------------
+
+ - Pool size control implemented
+
+
+1.12b
+=======================
+
+*issues*
+--------------
+
+FIXD  - added connect() method to ConnectionPool
+
+
+1.11b
+=======================
+
+*enhancements*
+--------------
+
+ - Transaction and ConnectionPool (adbapi compat) added
+
+
+*issues*
+--------------
+
+FIXD  - protocol layer no longer calls back with stale transaction 
+        status flag
+
+
+1.10b
+=======================
+
+*issues*
+--------------
+
+FIXD  - format() and execute() now take all pyformat argument
+        types, not just dicts
+
+FIXD  - closed connections handle failed query execution more
+        gracefully
+
+
+1.9b
+=======================
+
+*enhancements*
+--------------
+
+ - connection.cursor() is no longer deferred; you get your cursor object
+   immediately.  Now, everything is queued, including before a real
+   connection is made to the db, and *no* callbacks are necessary unless 
+   you care about a query response.
+
+ - pgasync knows the difference between "dirty" and "clean" transactions.
+   It will avoid issuing ROLLBACK when only selects have been done, and
+   similarly it will resume a select-only transaction across different 
+   cursors to avoid a needless BEGIN
+
+ - connection.exFetch was implemented for convenience
+
+
+1.8b
+=======================
+
+*issues*
+--------------
+
+FIXD  - str, int, float, True/False, datetime instances returned from 
+        fetch() queries instead of pgtypes
+
+FIXD  - date/time/timestamp handling corrected
+
+FIXD  - None passed to execute/exFetch results in NULL insertion
+
+FIXD  - Premature cursor release issues resolved; removed automatic 
+        cursor release 
+
+FIXD  - Simplified pgtypes for output-only usage; removed
+        stack inspection
+
+
+1.7b
+=======================
+
+*issues*
+--------------
+
+FIXD  - fetchone() was corrected to return values consistent
+        with the PEP
+
+
+1.6b
+=======================
+
+*issues*
+--------------
+
+FIXD  - STRING and BINARY types now inherit from str, not
+        types.StringType
+
+
+1.5b
+=======================
+
+*issues*
+--------------
+
+FIXD  - execute() now strips query when looking for SELECT
+
+FIXD  - params are optional to execute and exFetch
+
+FIXD  - docstrings reflect the new param style
+
+
+1.4b
+=======================
+
+*issues*
+--------------
+
+FIXD  - Changed references to imaginary 'pystyle' format
+        to 'pyformat'
+
+FIXD  - Changed execute/exFetch functions to accept a
+        dictionary instead of kwargs in compliance with
+		the DB API convention
+
+
+1.3b
+=======================
+
+*enhancements*
+--------------
+ - execute (and variants) can take a datetime.datetime now
+   as a format argument
+
+*additions*
+-----------
+ - examples/wiki
+
+*issues*
+--------------
+
+FIXD  - error handling is now corrected.  addErrback/errback works 
+        for all library deferred exceptions
+       
+FIXD  - under high concurrency, release() is necessary to give the
+        cursor back to the pool.. so release() was implemented
+
+
+1.2b
+=======================
+
+*issues*
+--------------
+
+FIXD  - Old examples distributed instead of new
+
+
+1.1b
+=======================
+Note: connection.cursor() returns a Deferred now
+
+*enhancements*
+--------------
+ - Query queues implemented.  Slight performance increase, and much cleaner 
+   API.  
+
+*removals*
+----------
+ - adbapi compat layer.  
+
+*issues*
+--------------
+
+FIXD  - Problem with setup.py *always* requiring Pyrex (credit: Bob Ippolito)
+
+
+
+1.0b
+=======================
+
+*enhancements*
+--------------
+ - Change to twisted's deferreds
+ - adbapi wrapper
+
+*issues*
+--------------
+
+FIXD  - string quote escape sequence was "\'", now it's "''"
+
+
+
+3b
+=======================
+
+*enhancements*
+--------------
+
+ - connect is now an instantaneous operation
+ - exFetch added to the fe.py.  
+
+
+
+2b
+=======================
+
+*enhancements*
+--------------
+
+ - Simplified the net.py code b/c we're *only using byte count terminators;
+   moved it from my arraybuffer class to (c)StringIO.  Faster now.
+ - Renamed cursor.conn to cursor.connection in compliance with optional
+   DB API 2.0 spec
+
+*issues*
+-------
+
+FIXD  - Hanging in C fixed when the move to cStringIO buffering happened
+        strings when things speed up, concurrency issues
+FIXD  - __del__ / gc wasn't happening because cursor._callbackInfo held a
+        reference
+FIXD  - cursor.rowcount reflects modifications on INSERT, UPDATE
+FIXD  - cursor 'none' error 
+FIXD  - Ensure that the convert.c things work correcty on Linux, other systems
+FIXD  - Source documentation
+FIXD  - Callbacks need a queue, not just a var

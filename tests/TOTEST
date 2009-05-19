@@ -1,0 +1,7 @@
+* types
+* concurrent access
+* transactions--rollback, etc
+* stored procedures
+* one time/multiple time connections
+* error conditions
+* queuing (what is hard here?)

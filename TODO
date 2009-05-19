@@ -1,0 +1,12 @@
+(in progress)
+* unit tests
+* check unicode/utf-8 support
+
+(done: moving to changelog for next release)
+* mg's patch from list
+* my patch.. fixing money type
+* type adapter registry, cleanup
+* binary fixes
+* one-time connections
+* explicit/multiple pools
+* connection.close() now releases the connection back to the pool

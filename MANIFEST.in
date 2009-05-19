@@ -1,0 +1,9 @@
+recursive-include pgasync *.py *.pyx *.c *.h
+recursive-include examples *.py 
+include examples/wiki/setup.sh
+include examples/wiki/README
+include TODO
+include README
+include LICENSE
+include CHANGELOG
+include setup.py
