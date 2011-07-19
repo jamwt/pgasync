@@ -170,6 +170,7 @@ class PgProtocol(CountTerminatedProtocol):
 			params[k] = v
 
 		log.msg ("%s: %s" % (params["C"],params["M"]))
+		self.switch()
 
 	def packet_error(self,data):
 		"""The backend told us a fatal error has occurred.
